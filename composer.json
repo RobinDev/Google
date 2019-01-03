@@ -1,0 +1,30 @@
+{
+    "name": "ropendev/google",
+    "description": "Google Helper to Hack serp",
+    "keywords": [],
+    "homepage": "https://piedweb.com",
+    "license": "MIT",
+    "require": {
+        "ropendev/curl": "^1.0",
+        "ropendev/simple_html_dom": "^1.7",
+        "ropendev/cache": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "rOpenDev\\Google\\": "src/"
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Robin D.",
+            "email": "contact@robin-d.fr",
+            "homepage": "https://www.robin-d.fr/"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^7.5"
+    }
+}
