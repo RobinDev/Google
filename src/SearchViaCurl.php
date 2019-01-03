@@ -12,7 +12,7 @@ class SearchViaCurl extends Search
     /**
      * @return string|false Contenu html de la page
      */
-    protected function requestGoogle($url)
+    protected function requestGoogle(string $url)
     {
         $cache = $this->getCache($url);
         if (false !== $cache) {
