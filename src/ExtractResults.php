@@ -37,6 +37,16 @@ class ExtractResults
         return $result;
     }
 
+    /**
+     * @return string or NULL if next page link not found
+     */
+    public function getNextPageLink()
+    {
+        if (isset($this->html->find('#pnnext, h3 > a[href]')[0])) {
+            return $this->html->find('#pnnext')[0]->href;
+        }
+    }
+
     protected function getSelector(string $type)
     {
         if (null === $this->types) {

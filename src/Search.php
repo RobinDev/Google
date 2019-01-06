@@ -103,8 +103,9 @@ abstract class Search
 
             $this->result = array_merge($this->result, $extract->getOrganicResults());
 
-            if ($this->nbrPage > 1 && isset($this->html->find('#pnnext')[0])) { // #pnnext // td.b a
-                $url = 'https://www.google.'.$this->tld.str_replace('&amp;', '&', $this->html->find('#pnnext')[0]->href);
+            //h3 > a[href]
+            if ($this->nbrPage > 1 && $extract->getNextPageLink()) {
+                $url = 'https://www.google.'.$this->tld.str_replace('&amp;', '&', $extract->getNextPageLink());
             } else {
                 break;
             }
