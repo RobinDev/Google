@@ -2,8 +2,8 @@
 
 namespace rOpenDev\Google;
 
-use rOpenDev\Cache\SimpleCacheFile as fileCache;
 use Exception;
+use rOpenDev\Cache\SimpleCacheFile as fileCache;
 
 trait CacheTrait
 {

@@ -1,14 +1,22 @@
 <?php
 
-namespace rOpenDev\Google;
+namespace rOpenDev\Qwant;
 
-abstract class Search
+use rOpenDev\Google\CacheTrait;
+use rOpenDev\Google\ConfSearchTrait;
+use rOpenDev\Google\SleepTrait;
+
+abstract class QwantSearch
 {
-    use CacheTrait, ConfSearchTrait, SleepTrait;
+    use CacheTrait;
+    use ConfSearchTrait;
+    use SleepTrait;
 
     // =======
     // -------
     // =======
+
+    protected $offset = 0;
 
     /** @var int Current page * */
     protected $page = 1;
@@ -32,7 +40,11 @@ abstract class Search
     public function generateGoogleSearchUrl()
     {
         $this->setParameter('q', $this->q);
-        $url = 'https://www.google.'.$this->tld.'/search?'.$this->generateParameters();
+        // ToSearchFromFranceInFrench, move it to config (todo)
+        $defaultParameter = 'r=FR&sr=fr&l=fr_fr&h=0&s=1&a=1&b=1&vt=0&hc=1&smartNews=1&smartSocial=1&theme=0&i=1&donation=0&qoz=1&shb=1&shl=1';
+        //$url = 'https://www.qwant.com/search?'.$defaultParameter.'&q='.urlencode($this->q);//.$this->generateParameters();
+        $url = 'https://api.qwant.com/api/search/web?count=10&q='.urlencode($this->q).'&t=web&device=desktop&extensionDisabled=true&safesearch=1&locale=fr_FR&uiv=4';
+
         return $url;
     }
 
@@ -55,20 +67,6 @@ abstract class Search
      */
     protected function amIKickedByGoogleThePowerful($output)
     {
-        /* Google respond :
-         * We're sorry...... but your computer or network may be sending automated queries.
-         * To protect our users, we can't process your request right now.'
-         */
-        if (false !== strpos($output, '<title>Sorry...</title>')) {
-            return 2;
-        }
-
-        /* Captcha Google */
-        elseif (false !== strpos($output, 'e=document.getElementById(\'captcha\');if(e){e.focus();}')) {
-            return 1;
-        }
-
-        /* RAS */
         return false;
     }
 
@@ -99,13 +97,15 @@ abstract class Search
                 return false;
             }
 
-            $extract = new ExtractResults($output);
-
-            $this->result = array_merge($this->result, $extract->getOrganicResults());
+            $extract = $this->extractResultsFromJson(json_decode($output, true));
+            //var_dump($extract); exit;
+            $this->numberItemsJustExtracted = count($extract);
+            $this->result = array_merge($this->result, $extract);
 
             //h3 > a[href]
-            if ($this->nbrPage > 1 && $extract->getNextPageLink()) {
-                $url = 'https://www.google.'.$this->tld.str_replace('&amp;', '&', $extract->getNextPageLink());
+            $nextPageLink = $this->getNextPageLink();
+            if ($this->nbrPage > 1 && $nextPageLink) {
+                $url = $nextPageLink;
             } else {
                 break;
             }
@@ -114,25 +114,31 @@ abstract class Search
         return $this->result;
     }
 
-    /**
-     * getNbrResults va chercher le nombre de résulats que Google affiche proposer.
-     *
-     * @return int
-     */
-    public function getNbrResults()
+    public function extractResultsFromJson($json)
     {
-        $url = $this->generateGoogleSearchUrl();
-        $output = $this->requestGoogle($url);
-        if (false !== $output) {
-            $html = new \simple_html_dom();
-            $html->load($output);
+        $results = [];
 
-            $rS = $html->find('#resultStats');
-            if (isset($rS[0]->plaintext)) {
-                $s = (string) $this->normalizeTextFromGoogle($rS[0]->plaintext);
-
-                return intval(preg_replace('/[^0-9]/', '', $s));
+        if (isset($json['data']['result']['items'])) {
+            foreach ($json['data']['result']['items'] as $item) {
+                $results[] = [
+                    'type' => 'organic',
+                    'title' => strip_tags($item['title']),
+                    'link' => $item['url'],
+                ];
             }
         }
+
+        return $results;
+    }
+
+    public function getNextPageLink()
+    {
+        if ($this->offest > 90 || $this->numberItemsJustExtracted < 10) {
+            return false;
+        }
+
+        $this->offest = $this->offset + 10;
+
+        return $this->generateGoogleSearchUrl().'&offset='.$this->offest;
     }
 }

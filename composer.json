@@ -11,7 +11,8 @@
     },
     "autoload": {
         "psr-4": {
-            "rOpenDev\\Google\\": "src/"
+            "rOpenDev\\Google\\": "google/",
+            "rOpenDev\\Qwant\\": "qwant/"
         },
         "exclude-from-classmap": [
             "/Tests/"

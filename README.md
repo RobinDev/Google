@@ -2,6 +2,8 @@
 
 Few PHP classes to manage request on Google Web Search & co.
 
+## Google
+
 ```php
 use rOpenDev\Google\SearchViaCurl;
 use rOpenDev\Google\TestProxy;
@@ -43,6 +45,21 @@ $Google->getError(); // $Google->cErrors contains curl errors
 TestProxy::go('monrpoxu'); // @return bool
 
 SafeBrowsing::get('https://piedweb.com');// @return bool
+```
+
+## QWANT
+
+Design for the contest [qwanturank](https://qwanturankseo.com).
+
+```php
+use rOpenDev\Qwant\QwantSearchViaCurl;
+
+$Qwant = new QwantSearchViaCurl('qwanturank');
+
+/**
+ * @return array of array containing type, title, link values
+ */
+$Qwant->extractResults();
 
 ```
 ## Contribute
