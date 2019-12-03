@@ -4,7 +4,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 use rOpenDev\Qwant\QwantSearchViaCurl;
 
-final class SearchTest extends TestCase
+final class QwantSearchTest extends TestCase
 {
     public function testResultViaCurl(): void
     {

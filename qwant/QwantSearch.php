@@ -133,12 +133,12 @@ abstract class QwantSearch
 
     public function getNextPageLink()
     {
-        if ($this->offest > 90 || $this->numberItemsJustExtracted < 10) {
+        if ($this->offset > 90 || $this->numberItemsJustExtracted < 10) {
             return false;
         }
 
-        $this->offest = $this->offset + 10;
+        $this->offset = $this->offset + 10;
 
-        return $this->generateGoogleSearchUrl().'&offset='.$this->offest;
+        return $this->generateGoogleSearchUrl().'&offset='.$this->offset;
     }
 }
