@@ -68,7 +68,7 @@ abstract class Search
         }
 
         /* Captcha Google */
-        elseif (false !== strpos($output, 'e=document.getElementById(\'captcha\');if(e){e.focus();}')) {
+        elseif (false !== strpos($output, 'document.getElementById(\'captcha')) {
             return 1;
         }
 

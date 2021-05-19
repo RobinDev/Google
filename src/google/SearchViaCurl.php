@@ -48,6 +48,7 @@ class SearchViaCurl extends Search
         }
 
         $output = $curl->execute();
+        file_put_contents('debug.html', $output);
 
         /* Erreur logs de l'éxecution du cURL **/
         if ($curl->hasError()) {
