@@ -39,7 +39,7 @@ trait CacheTrait
      */
     public function deleteCacheFiles()
     {
-        if (!$this->cacheFolder) {
+        if (! $this->cacheFolder) {
             throw new Exception('Cache Folder is not defined : you can\'t delete cache files');
         }
 
@@ -55,7 +55,7 @@ trait CacheTrait
      */
     protected function getCacheManager()
     {
-        if (!$this->cacheFolder) {
+        if (! $this->cacheFolder) {
             return null;
         }
 
@@ -71,7 +71,7 @@ trait CacheTrait
      */
     protected function getCacheKey($url = null)
     {
-        return sha1($this->page.(int) $this->mobile.':'.($url ? $url : $this->generateGoogleSearchUrl()));
+        return sha1($this->page.(int) $this->mobile.':'.($url ?: $this->generateGoogleSearchUrl()));
     }
 
     protected function getCache($url)

@@ -2,17 +2,19 @@
 
 namespace rOpenDev\Google;
 
+use Exception;
 use rOpenDev\curl\CurlRequest;
 
 class SearchViaCurl extends Search
 {
     protected $referrer;
+
     protected $cookie;
 
     /**
      * @return string|false Contenu html de la page
      */
-    protected function requestGoogle(string $url)
+    protected function requestGoogle(string $url, bool $redir = false)
     {
         $cache = $this->getCache($url);
         if (false !== $cache) {
@@ -23,7 +25,7 @@ class SearchViaCurl extends Search
         $curl->setDefaultGetOptions()->setReturnHeader()->setEncodingGzip();
 
         if (isset($this->language)) {
-            $curl->setOpt(CURLOPT_HTTPHEADER, ['Accept-Language: '.$this->language]);
+            $curl->setOpt(\CURLOPT_HTTPHEADER, ['Accept-Language: '.$this->language]);
         }
         if (isset($this->userAgent)) {
             $curl->setUserAgent($this->userAgent);
@@ -50,7 +52,7 @@ class SearchViaCurl extends Search
         /* Erreur logs de l'éxecution du cURL **/
         if ($curl->hasError()) {
             $this->cErrors = $curl->getErrors();
-            $this->error = 1;
+            $this->error = 3;
 
             return false;
         }
@@ -62,6 +64,16 @@ class SearchViaCurl extends Search
             return false;
         }
 
+        if ($redirection = $this->getRedirection($output)) {
+            if (true === $redir) {
+                $this->error = 4;
+
+                return false;
+            }
+
+            return $this->requestGoogle('https://www.google.'.$this->tld.$redirection, true);
+        }
+
         /* Tout est Ok, on enregistre et on renvoit le html **/
         $this->setCache($url, $output);
 
@@ -70,5 +82,17 @@ class SearchViaCurl extends Search
         $this->execSleep();
 
         return $output;
+    }
+
+    /**
+     * Retrieve a meta refresh.
+     */
+    private function getRedirection(string $html): string
+    {
+        if (preg_match('/content="\d+;url=(.*?)"/i', $html, $match)) {
+            return str_replace('&amp;', '&', $match[1]);
+        }
+
+        return '';
     }
 }

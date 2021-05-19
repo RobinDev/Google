@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
@@ -16,7 +17,7 @@ final class SearchTest extends TestCase
                  ->setSleep(1)
                  ->setCacheFolder(null)
         ;
-        $results =  $Google->extractResults();
+        $results = $Google->extractResults();
 
         $this->assertEquals('https://piedweb.com/', $results[0]['link']);
     }
@@ -32,9 +33,8 @@ final class SearchTest extends TestCase
                  ->setMobile(true)
                  ->setCacheFolder(null)
         ;
-        $results =  $Google->extractResults();
+        $results = $Google->extractResults();
 
         $this->assertEquals('https://piedweb.com/', $results[0]['link']);
     }
 }
-

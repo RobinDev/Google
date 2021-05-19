@@ -18,7 +18,7 @@ class ResultsTypes
         if (null === $this->types) {
             $file = __DIR__.'/ResultTypes.csv';
             $content = file_get_contents($file);
-            $rows = explode(chr(10), $content);
+            $rows = explode(\chr(10), $content);
             array_shift($rows);
             foreach ($rows as $row) {
                 $row = explode(',', $row);

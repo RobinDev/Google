@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
@@ -12,10 +13,8 @@ final class QwantSearchTest extends TestCase
         $Qwant->setNbrPage(1) // Get Only first Page
                  ->setCacheFolder(null)
         ;
-        $results =  $Qwant->extractResults();
+        $results = $Qwant->extractResults();
 
         $this->assertEquals('https://piedweb.com/', $results[0]['link']);
     }
-
 }
-

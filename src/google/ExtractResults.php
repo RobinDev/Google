@@ -8,6 +8,7 @@ class ExtractResults
      * @var array from \rOpenDev\Google\ResultTypes.php
      */
     protected $types;
+
     /**
      * @var object dom
      */

@@ -24,6 +24,7 @@ abstract class Search
         1 => 'Google Captcha',
         2 => 'Google `We\'re sorry` (flagged as automated request)',
         3 => 'Erreurs cURL',
+        4 => 'Google is redirecting us indefinitely via meta refresh.',
     ];
 
     /**
@@ -93,11 +94,12 @@ abstract class Search
     public function extractResults()
     {
         for ($this->page = 1; $this->page <= $this->nbrPage; ++$this->page) {
-            if (!isset($url)) {// On génère l'url pour la première requète... Ensuite, on utilisera le lien Suivant.
+            if (! isset($url)) {// On génère l'url pour la première requète... Ensuite, on utilisera le lien Suivant.
                 $url = $this->generateGoogleSearchUrl();
             }
 
             $output = $this->requestGoogle($url);
+            //file_put_contents('debug.html', $output);
             if (false === $output) {
                 return false;
             }
@@ -134,7 +136,7 @@ abstract class Search
             if (isset($rS[0]->plaintext)) {
                 $s = (string) $this->normalizeTextFromGoogle($rS[0]->plaintext);
 
-                return intval(preg_replace('/[^0-9]/', '', $s));
+                return (int) (preg_replace('/[^0-9]/', '', $s));
             }
         }
     }

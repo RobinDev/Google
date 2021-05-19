@@ -7,6 +7,7 @@ use rOpenDev\curl\CurlRequest;
 class QwantSearchViaCurl extends QwantSearch
 {
     protected $referrer;
+
     protected $cookie;
 
     /**
@@ -23,7 +24,7 @@ class QwantSearchViaCurl extends QwantSearch
         $curl->setDefaultGetOptions()->setReturnHeader()->setEncodingGzip();
 
         if (isset($this->language)) {
-            $curl->setOpt(CURLOPT_HTTPHEADER, ['Accept-Language: '.$this->language]);
+            $curl->setOpt(\CURLOPT_HTTPHEADER, ['Accept-Language: '.$this->language]);
         }
         if (isset($this->userAgent)) {
             $curl->setUserAgent($this->userAgent);

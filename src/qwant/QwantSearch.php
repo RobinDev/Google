@@ -88,7 +88,7 @@ abstract class QwantSearch
     public function extractResults()
     {
         for ($this->page = 1; $this->page <= $this->nbrPage; ++$this->page) {
-            if (!isset($url)) {// On génère l'url pour la première requète... Ensuite, on utilisera le lien Suivant.
+            if (! isset($url)) {// On génère l'url pour la première requète... Ensuite, on utilisera le lien Suivant.
                 $url = $this->generateGoogleSearchUrl();
             }
 
@@ -99,7 +99,7 @@ abstract class QwantSearch
 
             $extract = $this->extractResultsFromJson(json_decode($output, true));
             //var_dump($extract); exit;
-            $this->numberItemsJustExtracted = count($extract);
+            $this->numberItemsJustExtracted = \count($extract);
             $this->result = array_merge($this->result, $extract);
 
             //h3 > a[href]

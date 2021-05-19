@@ -22,7 +22,7 @@ class TestProxy
     public function isProxyValid(?string $proxy = null)
     {
         $keywords = ['bateau', 'avion', 'navire', 'seconde', 'bac', 'piscine', 'fuser', 'place', 'homme', 'femme',  'quad', 'moto', 'velo',
-                           'enfant', 'poilu', 'voiture', 'oiseau', 'singe', 'animaux', 'nature', 'paysage', 'jeux', 'maison', 'paysage', 'jardin', ];
+            'enfant', 'poilu', 'voiture', 'oiseau', 'singe', 'animaux', 'nature', 'paysage', 'jeux', 'maison', 'paysage', 'jardin', ];
 
         $GoogleSerp = new Search($keywords[array_rand($keywords)]);
         $GoogleSerp->setTld('fr')->setLanguage('fr')->setSleep(0)->setNbrPage(1)->setCache(false);
