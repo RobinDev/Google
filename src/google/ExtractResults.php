@@ -26,7 +26,7 @@ class ExtractResults
         $result = [];
         foreach ($results as $r) {
             $title = $r->find('h3, [role=heading]', 0);
-            if ($title) {
+            if ($title  && $r->find('a', 0)) {
                 $result[] = [
                     'type' => 'organic',
                     'title' => $this->normalizeTextFromGoogle($title->innertext),
