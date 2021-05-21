@@ -71,7 +71,11 @@ trait CacheTrait
      */
     protected function getCacheKey($url = null)
     {
-        return sha1($this->page.(int) $this->mobile.':'.($url ?: $this->generateGoogleSearchUrl()));
+        $url = $url ?: $this->generateGoogleSearchUrl();
+        $url = preg_replace('/&(gbv=1|sei=([a-z0-9]+)(&|$))/i', '&', $url);
+        $url = trim($url, '&');
+
+        return sha1($this->page.(int) $this->mobile.':'.$url);
     }
 
     protected function getCache($url)
