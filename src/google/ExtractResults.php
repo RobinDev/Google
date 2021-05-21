@@ -43,8 +43,9 @@ class ExtractResults
      */
     public function getNextPageLink()
     {
-        if (isset($this->html->find('#pnnext, h3 > a[href]')[0])) {
-            return $this->html->find('#pnnext')[0]->href;
+        $nextPageLink = $this->html->find('[aria-label="Page suivante"]');
+        if (isset($nextPageLink[0])) {
+            return $nextPageLink[0]->href;
         }
     }
 
