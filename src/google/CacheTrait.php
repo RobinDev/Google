@@ -3,17 +3,20 @@
 namespace rOpenDev\Google;
 
 use Exception;
+use rOpenDev\Cache\SimpleCacheFile;
 use rOpenDev\Cache\SimpleCacheFile as fileCache;
 
 trait CacheTrait
 {
     /** @var mixed Contain the cache folder for SERP results * */
-    protected $cacheFolder = '/tmp';
+    protected string $cacheFolder = '/tmp';
 
     /** @var int Contain in seconds, the time cache is valid. Default 1 Day (86400). * */
-    protected $cacheExpireTime = 86400;
+    protected int $cacheExpireTime = 86400;
 
-    public function setCacheExpireTime($seconds)
+    protected bool $previousRequestWasFromCache = false;
+
+    public function setCacheExpireTime($seconds): self
     {
         $this->cacheExpireTime = $seconds;
 
@@ -23,9 +26,9 @@ trait CacheTrait
     /**
      * @param string $cache
      */
-    public function setCacheFolder(?string $cache)
+    public function setCacheFolder(?string $cache): self
     {
-        $this->cacheFolder = $cache;
+        $this->cacheFolder = null === $cache ? '' : $cache;
 
         return $this;
     }
@@ -37,7 +40,7 @@ trait CacheTrait
      *
      * @return int Number of files deleted
      */
-    public function deleteCacheFiles()
+    public function deleteCacheFiles(): int
     {
         if (! $this->cacheFolder) {
             throw new Exception('Cache Folder is not defined : you can\'t delete cache files');
@@ -53,7 +56,7 @@ trait CacheTrait
      *
      * @return \rOpenDev\cache\SimpleCacheFile
      */
-    protected function getCacheManager()
+    protected function getCacheManager(): ?SimpleCacheFile
     {
         if (! $this->cacheFolder) {
             return null;
@@ -66,10 +69,8 @@ trait CacheTrait
 
     /**
      * Return a cache key | A vérifier avec chrome.
-     *
-     * @return string
      */
-    protected function getCacheKey($url = null)
+    protected function getCacheKey($url = null): string
     {
         $url = $url ?: $this->generateGoogleSearchUrl();
         $url = preg_replace('/&(gbv=1|sei=([a-z0-9]+)(&|$))/i', '&', $url);
@@ -78,21 +79,23 @@ trait CacheTrait
         return sha1($this->page.(int) $this->mobile.':'.$url);
     }
 
-    protected function getCache($url)
+    protected function getCache($url): string
     {
         if ($this->cacheFolder) {
             $source = $this->getCacheManager()->get($this->getCacheKey($url), $this->cacheExpireTime);
-            //$this->previousResultCacheKey = $cacheKey;
+            $this->previousRequestWasFromCache = true;
+
             return $source;
         }
 
-        return false;
+        return '';
     }
 
-    public function setCache($url, $source)
+    public function setCache($url, $source): void
     {
         if ($this->cacheFolder) {
             $this->getCacheManager()->set($this->getCacheKey($url), $source);
+            $this->previousRequestWasFromCache = false;
         }
     }
 }

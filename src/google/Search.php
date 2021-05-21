@@ -110,6 +110,7 @@ abstract class Search
 
             //h3 > a[href]
             if ($this->nbrPage > 1 && $extract->getNextPageLink()) {
+                $this->execHalfSleep();
                 $url = 'https://www.google.'.$this->tld.str_replace('&amp;', '&', $extract->getNextPageLink());
             } else {
                 break;

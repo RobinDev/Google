@@ -2,7 +2,6 @@
 
 namespace rOpenDev\Google;
 
-use Exception;
 use rOpenDev\curl\CurlRequest;
 
 class SearchViaCurl extends Search
@@ -17,7 +16,7 @@ class SearchViaCurl extends Search
     protected function requestGoogle(string $url, bool $redir = false)
     {
         $cache = $this->getCache($url);
-        if (false !== $cache) {
+        if ('' !== $cache) {
             return $cache;
         }
 

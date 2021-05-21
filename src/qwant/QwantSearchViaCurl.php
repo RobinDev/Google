@@ -16,7 +16,7 @@ class QwantSearchViaCurl extends QwantSearch
     protected function requestGoogle(string $url)
     {
         $cache = $this->getCache($url);
-        if (false !== $cache) {
+        if ('' !== $cache) {
             return $cache;
         }
 
