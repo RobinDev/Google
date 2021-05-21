@@ -14,13 +14,18 @@ trait CacheTrait
     /** @var int Contain in seconds, the time cache is valid. Default 1 Day (86400). * */
     protected int $cacheExpireTime = 86400;
 
-    protected bool $previousRequestWasFromCache = false;
+    protected bool $previousRequestUsedCache = false;
 
     public function setCacheExpireTime($seconds): self
     {
         $this->cacheExpireTime = $seconds;
 
         return $this;
+    }
+
+    public function previousRequestUsedCache(): bool
+    {
+        return $this->previousRequestUsedCache;
     }
 
     /**
@@ -83,7 +88,7 @@ trait CacheTrait
     {
         if ($this->cacheFolder) {
             $source = $this->getCacheManager()->get($this->getCacheKey($url), $this->cacheExpireTime);
-            $this->previousRequestWasFromCache = true;
+            $this->previousRequestUsedCache = true;
 
             return $source;
         }
@@ -95,7 +100,7 @@ trait CacheTrait
     {
         if ($this->cacheFolder) {
             $this->getCacheManager()->set($this->getCacheKey($url), $source);
-            $this->previousRequestWasFromCache = false;
+            $this->previousRequestUsedCache = false;
         }
     }
 }

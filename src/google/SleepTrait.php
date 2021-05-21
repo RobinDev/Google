@@ -40,7 +40,7 @@ trait SleepTrait
      */
     public function execSleep()
     {
-        if ($this->previousRequestWasFromCache) {
+        if ($this->previousRequestUsedCache) {
             return;
         }
 
@@ -59,7 +59,7 @@ trait SleepTrait
      */
     public function execHalfSleep()
     {
-        if ($this->previousRequestWasFromCache) {
+        if ($this->previousRequestUsedCache) {
             return;
         }
 
